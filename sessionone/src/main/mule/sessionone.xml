@@ -33,5 +33,15 @@ groupBy $.StudentID
 			</ee:message>
 		</ee:transform>
 		<file:write doc:name="Write" doc:id="5e480378-a900-4fee-9414-1f376e84d895" config-ref="File_Config1" path="C:\Users\dagnu\Desktop\Usecase one\Output\use case out put.txt" />
+		<ee:transform doc:name="Transform Message" doc:id="61f8f341-0a7d-460c-b6f7-3d41c71d0b3a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="0df3d190-8bbc-45f9-b17d-165aec2099a5" />
 	</flow>
 </mule>
