@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="93c75b61-fcdb-4d9e-981b-44fbc8e5c7f8" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="be9f81b1-0c02-4a11-b4ff-3c66c321e7a3" >
+		<file:connection workingDir="C:\Users\dagnu\Desktop\Usecase one\Input" />
+	</file:config>
+	<file:config name="File_Config1" doc:name="File Config" doc:id="827fbf21-e9c8-47bc-9d1b-4764ef2de0b5" >
+		<file:connection workingDir="C:\Users\dagnu\Desktop\Usecase one\Output" />
+	</file:config>
+	<flow name="sessiononeFlow" doc:id="60c7ccd3-3646-43e0-86e3-90c0b162c9e5" >
+		<http:listener doc:name="Listener" doc:id="4f9b1233-cc28-499d-9686-1ac53fd52bfb" config-ref="HTTP_Listener_config" path="/usecase1"/>
+		<logger level="INFO" doc:name="Logger" doc:id="bc7f1e2d-081d-4982-99ef-3d55ff0287ad" />
+		<file:read doc:name="Read" doc:id="244954d3-aee3-4e1e-8b05-ad63534e18f7" config-ref="File_Config" path="C:\Users\dagnu\Desktop\Usecase one\Input\testUsecase_1.csv" outputMimeType="application/csv"/>
+		<ee:transform doc:name="Transform Message" doc:id="3037277d-7fb0-411e-8195-12da60a170be" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload
+groupBy $.StudentID
+
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<file:write doc:name="Write" doc:id="5e480378-a900-4fee-9414-1f376e84d895" config-ref="File_Config1" path="C:\Users\dagnu\Desktop\Usecase one\Output\use case out put.txt" />
+	</flow>
+</mule>
